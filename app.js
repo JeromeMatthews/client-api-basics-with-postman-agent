@@ -75,7 +75,25 @@ a new object with the founded city, storing it in thisCity.
   });
 });
 
-server.patch('/api/v1/cities', (req, res) => {});
+server.patch('/api/v1/cities/:name', (req, res) => {
+
+  res.status(200).json({
+    'status': 'success',
+    data:{
+      city: "updated city data."
+    }
+  });
+
+});
+
+
+server.delete('/api/v1/cities/:name', (req, res)=>{
+
+  res.status(204).json({
+    status: 'success', 
+    data: null
+  })
+})
 
 const port = 4000;
 server.listen(port, () => {
