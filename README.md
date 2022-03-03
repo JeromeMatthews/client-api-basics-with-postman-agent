@@ -3,7 +3,7 @@
 Just a basic project for practicing API endpoints using the HTTP methods:
 GET, POST, PATCH, and DELETE
 The project uses Postman to simulate outside requests to the node server api.
-The project is a companion project to the course projact: NaTours, Using some basic
+The project is a companion project to the course project: NaTours, Using some basic
 data from major and minor cities around the world. 
 One of a few mini-projects to reinforce content learned in the course:
 Node.js, Express, MongoDB & More: The Complete Bootcamp 2022 - by Jonas Schmedtmann
