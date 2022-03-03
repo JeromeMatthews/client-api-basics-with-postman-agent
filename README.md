@@ -1,5 +1,5 @@
 # client-api-basics-with-postman-agent
-
+A basic project for practicing API endpoints using the HTTP methods. The project uses Postman to simulate outside requests to the node server api. Using some basic data from major and minor cities around the world. 
 ------------------------------------------------------------------------------------
 Project update: March - 3rd, 2022 
 
