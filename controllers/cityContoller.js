@@ -52,7 +52,8 @@ what we use to identify the city that corresponds with the request.
 
 exports.getCity = (req, res) => {
   console.log(req.params);
-  const cityName = req.params.name;
+  const cityName = req.params.id;
+  console.log(cityName);
 
   /* compares an object c - with all the objects in the citydata object array. 
   If it finds an object with the property found in the variable: id, then it returns 
@@ -60,12 +61,16 @@ exports.getCity = (req, res) => {
   */
   const thisCity = cities.find((c) => c.Name === cityName);
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      thisCity,
-    },
-  });
+  if (!cityName) {
+    res.status(404).json({ message: 'No city found with this name:' });
+  } else {
+    res.status(200).json({
+      status: 'success',
+      data: {
+        thisCity,
+      },
+    });
+  }
 };
 
 exports.updateCity = (req, res) => {
