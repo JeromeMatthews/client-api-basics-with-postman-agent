@@ -32,8 +32,8 @@ const citySchema = new mongoose.Schema({
     },
   },
   Founded: {
-    type: String,
-    requited: true,
+    type: Number,
+    requried: true,
     unique: true,
   },
   Population: {

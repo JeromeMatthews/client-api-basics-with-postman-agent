@@ -1,21 +1,33 @@
 const fs = require('fs');
+const mongoose = require('mongoose');
+const City = require('../model/cityModel');
+
 // ----------------------------------------------------------------
 /* read the data in from the city data json file. Then parsing it so it can be used. 
 we can use teh blocking sync version of file read becuase the data is read 
 at the top of the execution loop so there's no need to worry about any blocking as 
 no other code comes before it.*/
-const cities = JSON.parse(
-  fs.readFileSync(`${__dirname}/../data/citydata.json`)
-);
+// const cities = JSON.parse(
+//   fs.readFileSync(`${__dirname}/../data/citydata.json`)
+// );
 
-exports.getAllCities = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    allCities: cities.length,
-    data: {
-      cities: cities,
-    },
-  });
+exports.getAllCities = async (req, res) => {
+  try {
+    let cityQuery = City.find();
+    const cities = await cityQuery;
+    res.status(200).json({
+      status: 'success',
+      allCities: cities.length,
+      data: {
+        cities: cities,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err,
+    });
+  }
 };
 exports.addNewCity = (req, res) => {
   const newCity = Object.assign(req.body);
