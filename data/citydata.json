@@ -93,12 +93,5 @@
     "landarea": { "metric": "m2", "value": 505 },
     "Elevation": { "metric": "m", "value": 650 },
     "population": { "metric": "million", "value": 1.508 }
-  },
-  {
-    "name": "San Antonio",
-    "description": "San Antonio is a major city in south-central Texas with a rich colonial heritage. The Alamo, an 18th-century Spanish mission preserved as a museum, marks an infamous 1836 battle for Texan independence from Mexico. Following the San Antonio River, the miles-long River Walk is a landmark pedestrian promenade lined with cafes and shops. HemisFair Park’s 750-ft. Tower of the Americas overlooks the city.",
-    "landarea": { "metric": "m2", "value": 505 },
-    "Elevation": { "metric": "m", "value": 650 },
-    "population": { "metric": "million", "value": 1.508 }
   }
 ]

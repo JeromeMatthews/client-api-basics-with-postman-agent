@@ -11,12 +11,16 @@ const DB = process.env.DATABASE.replace(
 );
 
 mongoose.connect(DB, {}).then(() => {
-  cnosole.log(' DB connection established');
+  console.log(' DB connection established');
 });
 
 //READ JSON FILE WITH CITY DATA
 //Can use sync as the funciton here as it will be the first thing to be executed in the process cycle, so doesn't have an effect either way if the asynchronous verison of the function is used or not.
-const cityData = fs.readFileSync(`${__dirname}/data/citydata.json`, 'utf8');
+
+//NOTE: Remember the JSON data needs to be converted into javascript objects so that they can be stored in the database. Mongo will automatically convert the javascript objects to BSON objects for storage.
+const cityData = JSON.parse(
+  fs.readFileSync(`${__dirname}/data/citydata.json`, 'utf8')
+);
 
 //ADD FILE DATA TO THE DATABASE AUTOMATICALLY
 const importData = async () => {
