@@ -29,24 +29,41 @@ exports.getAllCities = async (req, res) => {
     });
   }
 };
-exports.addNewCity = (req, res) => {
-  const newCity = Object.assign(req.body);
-  cities.push(newCity);
+exports.addNewCity = async (req, res) => {
+  //WRITING TO FILE
+  //const newCity = Object.assign(req.body);
+  // cities.push(newCity);
 
-  fs.writeFile(
-    `${__dirname}/data/citydata.json`,
-    JSON.stringify(cities),
-    (err) => {
-      res.status(201).json({
-        status: 'success',
-        allCities: cities.length,
-        data: {
-          recentlyAdded: newCity,
-          allCities: cities,
-        },
-      });
-    }
-  );
+  // fs.writeFile(
+  //   `${__dirname}/data/citydata.json`,
+  //   JSON.stringify(cities),
+  //   (err) => {
+  //     res.status(201).json({
+  //       status: 'success',
+  //       allCities: cities.length,
+  //       data: {
+  //         recentlyAdded: newCity,
+  //         allCities: cities,
+  //       },
+  //     });
+  //   }
+  // );
+
+  //FROM MONGO USING MONGOOSE Create();
+
+  try {
+    let cities = await City.create(req.body);
+
+    res.status(201).json({
+      status: 'success - new resource created.',
+      data: { cities: cities },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err,
+    });
+  }
 };
 
 // -----------------------------
