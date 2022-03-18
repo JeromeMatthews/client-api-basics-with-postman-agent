@@ -118,12 +118,6 @@ exports.getCity = async (req, res) => {
       message: err,
     });
   }
-
-  //In the case of the City project API, we need to find the city name in the DB not really the ID of a given city, given that users will expect to search for a specific city by its name, not having any knowledge of the database, nor would anyone want to search, by some long, complex ID string.
-  // Given this situation a query to the database usinf the find(); would be agumented to return the field name that matches the name taken from the request parameters object. I.E:  City.find({ Name: cityName });
-  //Taken what we learned from the Mongo Db couse with Max, and checking online for mongoose find() options.
-
-  // In the example from the course, Jonas references the document IDs, and as such uses the findById() method.
 };
 
 exports.updateCity = async (req, res) => {
@@ -158,6 +152,34 @@ exports.updateCity = async (req, res) => {
       message: err,
     });
   }
+
+  // ATTEMPT TO FIND BY CITY NAME AND UPDATE FIELDS... DIDN't WORK
+  //   try {
+  //     const filter = req.params.id;
+  //     const cityInfo = req.body;
+  //     let cities = await City.findOneAndUpdate(
+  //       { Name: filter },
+  //       { $set: { Name: cityInfo } }
+  //     );
+
+  //     res.status(200).json({
+  //       status: `success, ${cityName} has been updated`,
+  //       data: {
+  //         city: cities,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     res.status(404).json({
+  //       status: 'error, unable to find city requested.',
+  //       message: err,
+  //     });
+  //   }
+  // };
+  //In the case of the City project API, we need to find the city name in the DB not really the ID of a given city, given that users will expect to search for a specific city by its name, not having any knowledge of the database, nor would anyone want to search, by some long, complex ID string.
+  // Given this situation a query to the database usinf the find(); would be agumented to return the field name that matches the name taken from the request parameters object. I.E:  City.find({ Name: cityName });
+  //Taken what we learned from the Mongo Db couse with Max, and checking online for mongoose find() options.
+
+  // In the example from the course, Jonas references the document IDs, and as such uses the findById() method.
 };
 
 exports.deleteCity = async (req, res) => {
