@@ -1,5 +1,3 @@
-const fs = require('fs');
-const mongoose = require('mongoose');
 const City = require('../model/cityModel');
 
 // ----------------------------------------------------------------
@@ -121,25 +119,68 @@ exports.getCity = async (req, res) => {
     });
   }
 
-  //In the case of the City project API, we need to find the city name in the DB not really the ID of a given city, given that users will expect to search for a specific city by its name, not having any knowledge of the database, nor would anyone want to search, by some long, complex ID string. 
+  //In the case of the City project API, we need to find the city name in the DB not really the ID of a given city, given that users will expect to search for a specific city by its name, not having any knowledge of the database, nor would anyone want to search, by some long, complex ID string.
   // Given this situation a query to the database usinf the find(); would be agumented to return the field name that matches the name taken from the request parameters object. I.E:  City.find({ Name: cityName });
-  //Taken what we learned from the Mongo Db couse with Max, and checking online for mongoose find() options. 
+  //Taken what we learned from the Mongo Db couse with Max, and checking online for mongoose find() options.
 
   // In the example from the course, Jonas references the document IDs, and as such uses the findById() method.
 };
 
-exports.updateCity = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    data: {
-      city: 'updated city data.',
-    },
-  });
+exports.updateCity = async (req, res) => {
+  //Placeholder code, was not able to implement
+  // res.status(200).json({
+  //   status: 'success',
+  //   data: {
+  //     city: 'updated city data.',
+  //   },
+  // });
+
+  //UPDATING DATA
+  try {
+    const cityName = req.params.id;
+    const filter = { Name: cityName };
+    const update = req.body;
+
+    let cities = await City.findByIdAndUpdate(cityName, update, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      status: `success, ${cityName} has been updated`,
+      data: {
+        city: cities,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'error, unable to find city requested.',
+      message: err,
+    });
+  }
 };
 
-exports.deleteCity = (req, res) => {
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+exports.deleteCity = async (req, res) => {
+  //Deleteing from Mongo database using Mongoose findByIdAndDelete(); method.
+
+  try {
+    const cityName = req.params.id;
+    await City.findByIdAndDelete(cityName);
+    res.status(204).json({
+      status: 'success, confirmed deltetion of city data.',
+      data: null,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error, unable to delete city requested.',
+      mesage: err,
+    });
+  }
+
+  //FILE DATA Deletion method
+
+  // res.status(204).json({
+  //   status: 'success',
+  //   data: null,
+  // });
 };
