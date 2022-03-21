@@ -5,6 +5,8 @@ const cityRoutes = require('./routes/cityroutes');
 
 app.use('/api/v1/cities', cityRoutes);
 
+
+
 // ------------------------------------------------------------
 /* All app related middleware 
  1- Morgan - detailed server logging:
