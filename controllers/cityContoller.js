@@ -39,6 +39,19 @@ exports.getAllCities = async (req, res) => {
       cityQuery = cityQuery.sort('Founded');
     }
 
+    //===================================
+
+    //3 Limiting fields:
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+
+      cityQuery = cityQuery.select(fields);
+    } else {
+      query = cityQuery.select('__v');
+      //set up a default limit, so that if no client device request provides a limit then we do a deafult limiting of some metadata coming from the server, in this case the __v field that mongo db creates on each document.
+    }
+    //===================================
+
     const cities = await cityQuery;
     res.status(200).json({
       status: 'success',
