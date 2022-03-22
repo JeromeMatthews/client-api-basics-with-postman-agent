@@ -11,25 +11,24 @@ no other code comes before it.*/
 
 exports.getAllCities = async (req, res) => {
   try {
-  //Filtering requests from the query object:
-  //1 -desturct the query object to isolate the parameters in it.
-  const queryObj = { ...req.query };
+    //Filtering requests from the query object:
+    //1 -desturct the query object to isolate the parameters in it.
+    const queryObj = { ...req.query };
 
-  //2 - Identify the fields to be excluded from the query objec: PSLF
-  const excludedFields = ['page', 'sort', 'limit', 'field'];
-  //3 remove the params from the query object, creating a blank object to set up control flow with. We will be able to secify what actions to take for each individual field, using if - then statements.
-  excludedFields.forEach((e) => delete queryObj[e]);
+    //2 - Identify the fields to be excluded from the query objec: PSLF
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    //3 remove the params from the query object, creating a blank object to set up control flow with. We will be able to secify what actions to take for each individual field, using if - then statements.
+    excludedFields.forEach((e) => delete queryObj[e]);
 
-  console.log(queryObj);
+    console.log(queryObj);
 
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(
+      /\b(gte)|(gt)|(lte)|(lt)\b/g,
+      (match) => `$${match}`
+    );
 
-
-  let queryStr = JSON.stringify(queryObj);
-  queryStr = queryStr.replace(/\b(gte)|(gt)|(lte)|(lt)\b/g, (match) => {`${match}`});
-
-
- 
-    let cityQuery = City.find(queryStr);
+    let cityQuery = City.find(JSON.parse(queryStr));
     const cities = await cityQuery;
     res.status(200).json({
       status: 'success',
@@ -122,12 +121,12 @@ exports.getCity = async (req, res) => {
 
   try {
     const cityName = req.params.id;
-    let cities = await City.find({ Name: cityName });
+    let cities = await City.findById(req.params.id);
     console.log(cityName);
     res.status(200).json({
       status: 'success, city found:',
       data: {
-        city: cities,
+        cities,
       },
     });
   } catch (err) {
