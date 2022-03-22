@@ -29,6 +29,16 @@ exports.getAllCities = async (req, res) => {
     );
 
     let cityQuery = City.find(JSON.parse(queryStr));
+
+    // 2 Sorting functionality:
+
+    if (req.query.sort) {
+      const sort = req.query.sort.split(',').join(' ');
+      query = query.sort(sort);
+    } else {
+      cityQuery = cityQuery.sort('Founded');
+    }
+
     const cities = await cityQuery;
     res.status(200).json({
       status: 'success',
