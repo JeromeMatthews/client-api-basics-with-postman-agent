@@ -20,8 +20,6 @@ exports.getAllCities = async (req, res) => {
     //3 remove the params from the query object, creating a blank object to set up control flow with. We will be able to secify what actions to take for each individual field, using if - then statements.
     excludedFields.forEach((e) => delete queryObj[e]);
 
-    console.log(queryObj);
-
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(
       /\b(gte)|(gt)|(lte)|(lt)\b/g,
@@ -34,9 +32,9 @@ exports.getAllCities = async (req, res) => {
 
     if (req.query.sort) {
       const sort = req.query.sort.split(',').join(' ');
-      query = query.sort(sort);
+      cityQuery = cityQuery.sort(sort);
     } else {
-      cityQuery = cityQuery.sort('Founded');
+      cityQuery = cityQuery.sort('_id');
     }
 
     //===================================
@@ -47,9 +45,28 @@ exports.getAllCities = async (req, res) => {
 
       cityQuery = cityQuery.select(fields);
     } else {
-      query = cityQuery.select('__v');
+      cityQuery = cityQuery.select('-__v');
       //set up a default limit, so that if no client device request provides a limit then we do a deafult limiting of some metadata coming from the server, in this case the __v field that mongo db creates on each document.
     }
+    //===================================
+
+    //4 PAGINATION:
+    const page = req.query.page * 1 || 1;
+    const limitValue = req.query.limit * 1 || 100;
+    // converting the strings to numbers as they come in from the query. Just multiple the input by 1 so that Javascript parses it correctly as a number.
+
+    const skipValue = (page - 1) * limitValue;
+    //How to calculate the skip value:
+    //page=3&limit=10, 1-10, page 1, 11-20, page 2, 21-30, page 3, 31-40, page 4
+    cityQuery = cityQuery.skip(skipValue).limit(limitValue);
+
+    if (req.query.page) {
+      const numCities = await City.countDocuments();
+      if (skip >= numCities) {
+        throw new Error('This page does not exist');
+      }
+    }
+
     //===================================
 
     const cities = await cityQuery;
@@ -61,9 +78,9 @@ exports.getAllCities = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(404).json({
       status: 'error',
-      message: err,
+      message: err.mesage,
     });
   }
 };
