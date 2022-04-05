@@ -1,4 +1,6 @@
 const City = require('../model/cityModel');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 // ----------------------------------------------------------------
 /* read the data in from the city data json file. Then parsing it so it can be used. 
@@ -84,7 +86,7 @@ exports.getAllCities = async (req, res) => {
     });
   }
 };
-exports.addNewCity = async (req, res) => {
+exports.addNewCity = catchAsync(async (req, res, next) => {
   //WRITING TO FILE
   //const newCity = Object.assign(req.body);
   // cities.push(newCity);
@@ -106,20 +108,15 @@ exports.addNewCity = async (req, res) => {
 
   //FROM MONGO USING MONGOOSE Create();
 
-  try {
-    let cities = await City.create(req.body);
+  let cities = await City.create(req.body);
 
-    res.status(201).json({
-      status: 'success - new resource created.',
-      data: { cities: cities },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'error',
-      message: err,
-    });
-  }
-};
+  res.status(201).json({
+    status: 'success - new resource created.',
+    data: { cities: cities },
+  });
+
+  next(new AppError('Could not create new resource.', 400));
+});
 
 // -----------------------------
 /*
@@ -134,7 +131,7 @@ what we use to identify the city that corresponds with the request.
 
 //  /:id - is the variable, it can be named anything.
 
-exports.getCity = async (req, res) => {
+exports.getCity = catchAsync(async (req, res, next) => {
   // Get a specific city using request parameters, manually from file.
   // console.log(req.params);
   // const cityName = req.params.id;
@@ -159,23 +156,18 @@ exports.getCity = async (req, res) => {
 
   //Get a city from the mongo database using mongoose: findById();
 
-  try {
-    const cityName = req.params.id;
-    let cities = await City.findById(req.params.id);
-    console.log(cityName);
-    res.status(200).json({
-      status: 'success, city found:',
-      data: {
-        cities,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'error, city not found.',
-      message: err,
-    });
-  }
-};
+  const cityName = req.params.id;
+  let cities = await City.findById(req.params.id);
+  console.log(cityName);
+  res.status(200).json({
+    status: 'success, city found:',
+    data: {
+      cities,
+    },
+  });
+
+  next(new AppError('City not found.', 404));
+});
 
 exports.updateCity = async (req, res) => {
   //Placeholder code, was not able to implement
