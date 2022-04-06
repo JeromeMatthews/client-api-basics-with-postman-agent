@@ -11,7 +11,7 @@ no other code comes before it.*/
 //   fs.readFileSync(`${__dirname}/../data/citydata.json`)
 // );
 
-exports.getAllCities = async (req, res) => {
+exports.getAllCities = async (req, res, next) => {
   try {
     //Filtering requests from the query object:
     //1 -desturct the query object to isolate the parameters in it.
@@ -156,20 +156,20 @@ exports.getCity = catchAsync(async (req, res, next) => {
 
   //Get a city from the mongo database using mongoose: findById();
 
-  const cityName = req.params.id;
-  let cities = await City.findById(req.params.id);
-  console.log(cityName);
+  const cities = await City.findById(req.params.id, () => {
+    return next(new AppError('City not found.', 404));
+    //we return so we don't send a response twice causing another error, "headers already sent" - error.
+  });
+
   res.status(200).json({
     status: 'success, city found:',
     data: {
       cities,
     },
   });
-
-  next(new AppError('City not found.', 404));
 });
 
-exports.updateCity = async (req, res) => {
+exports.updateCity = catchAsync(async (req, res, next) => {
   //Placeholder code, was not able to implement
   // res.status(200).json({
   //   status: 'success',
@@ -179,28 +179,30 @@ exports.updateCity = async (req, res) => {
   // });
 
   //UPDATING DATA
-  try {
-    const cityName = req.params.id;
-    const filter = { Name: cityName };
-    const update = req.body;
 
-    let cities = await City.findByIdAndUpdate(cityName, update, {
+  const cityName = req.params.id;
+  const filter = { Name: cityName };
+  const update = req.body;
+
+  let cities = await City.findByIdAndUpdate(
+    cityName,
+    update,
+    {
       new: true,
       runValidators: true,
-    });
+    },
+    () => {
+      return next(new AppError('City not found.', 404));
+      //we return so we don't send a response twice causing another error, "headers already sent" - error.
+    }
+  );
 
-    res.status(200).json({
-      status: `success, ${cityName} has been updated`,
-      data: {
-        city: cities,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'error, unable to find city requested.',
-      message: err,
-    });
-  }
+  res.status(200).json({
+    status: `success, ${cityName} has been updated`,
+    data: {
+      city: cities,
+    },
+  });
 
   // ATTEMPT TO FIND BY CITY NAME AND UPDATE FIELDS... DIDN't WORK
   //   try {
@@ -229,24 +231,21 @@ exports.updateCity = async (req, res) => {
   //Taken what we learned from the Mongo Db couse with Max, and checking online for mongoose find() options.
 
   // In the example from the course, Jonas references the document IDs, and as such uses the findById() method.
-};
+});
 
-exports.deleteCity = async (req, res) => {
+exports.deleteCity = catchAsync(async (req, res, next) => {
   //Deleteing from Mongo database using Mongoose findByIdAndDelete(); method.
 
-  try {
-    const cityName = req.params.id;
-    await City.findByIdAndDelete(cityName);
-    res.status(204).json({
-      status: 'success, confirmed deltetion of city data.',
-      data: null,
-    });
-  } catch (err) {
-    res.status(500).json({
-      status: 'error, unable to delete city requested.',
-      mesage: err,
-    });
-  }
+  const cityName = req.params.id;
+  await City.findByIdAndDelete(cityName, () => {
+    return next(new AppError('City not found.', 404));
+    //we return so we don't send a response twice causing another error, "headers already sent" - error.
+  });
+
+  res.status(204).json({
+    status: 'success, confirmed deltetion of city data.',
+    data: null,
+  });
 
   //FILE DATA Deletion method
 
@@ -254,4 +253,4 @@ exports.deleteCity = async (req, res) => {
   //   status: 'success',
   //   data: null,
   // });
-};
+});
