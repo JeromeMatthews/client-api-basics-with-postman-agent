@@ -6,6 +6,18 @@ const handleCastErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
+const handleDuplicateFieldsDB = (err) => {
+  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+  const message = `Duplicate field value ${value}, Please enter another value!`;
+  return new AppError(message, 400);
+};
+
+const handleValidationError = (err) => {
+  const errors = Object.values(err.errors).map((el) => el.message);
+  const message = `Invalid input data. ${errors.join('. ')}`;
+  return new AppError(message, 400);
+};
+
 //----------------------------------------------------------------
 
 const sendErrorDev = (err, res) => {
@@ -53,7 +65,7 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-     let error = {...err, name: err.name};
+    let error = Object.create(err);
     //this is a destruction of the error object from the server so it can be reassigned to the parameters outlined for our error handling middleware. The defualt is called err and we are chaning it to error, and using let, as the object will be changed later
 
     //-------------------------------
@@ -62,9 +74,11 @@ module.exports = (err, req, res, next) => {
 
         To do so, we have to place the isOperational flag (boolean assignment: this.IsOperational = true on our internally defined global error handling class) - on the error object coming from mongoose, which is why we have to destruct the error object: {...err} and then place it into the let error variable before conducting the if check for any mongoose specific errors in the handlers/functions below: */
 
-    if (err.name === 'CastError') error = handleCastErrorDB(error);
+    if (error.name === 'CastError') error = handleCastErrorDB(error);
     //Cast error handling for incorrectly entered paths (inputs) from the client side.
+    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
 
+    if (error.name === 'ValidationError') handleValidationError(error);
     sendErrorProd(error, res);
   }
 };
