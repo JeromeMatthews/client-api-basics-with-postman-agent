@@ -23,3 +23,24 @@ exports.signup = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+
+exports.login = (req,res, next) => {
+  const { email, password } = req.body; 
+
+  //STEPS FOR THE LOGIN -> TOKEN ISSUE PROCESS
+
+  //1 Check if email and password is correct
+  if(!email || !password){
+    next(new AppError('Please provide email and password', 400));
+  }
+
+  //2 Check if user exists && password is correct
+
+  //3 If everything is correct, send the token to the user/client
+  const token = '';
+  res.status(200).json({
+    status: 'success',
+    token
+  });
+}
