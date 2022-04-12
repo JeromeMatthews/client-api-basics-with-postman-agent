@@ -43,6 +43,13 @@ userSchema.pre('save', async function (next) {
   //Delete passwordConfirm field.
   this.passwordConfirm = undefined;
   //NOTE: We can do this becuase the required field on passwordConfirm will enforce an entry into the passwordConfirm field, but it is not necessary to be persisted to the database. It's role in confirming the input of what is found in password is finished here. So can be emptied.
+next();
 });
+
+userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+  //Return true if the passwords being compared are the same and false if they are different. The user password has to be passed in as the field is currently set to be unaccessible with select:false. So we can't reference it directly using this.passowrd as you would normally be able to. Given that this is a instance of the userSchema and its properties.  
+  return await bcrypt.compare(candidatePassword, userPassword);
+  //we need the .compare function to unhash the userPasword and copmare with the candidatePassword - the entered one. We would not be able to otherwise. This is for step 2 - part 2 checking to see if the password is correct. 
+}
 const user = mongoose.model('User', userSchema);
 module.exports = user;
