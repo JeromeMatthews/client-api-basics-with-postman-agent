@@ -23,7 +23,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.login = (req, res, next) => {
+exports.login = catchAsync(async (req, res, next) => {
   console.log(req.body);
   const { email, password } = req.body;
 
@@ -31,10 +31,13 @@ exports.login = (req, res, next) => {
 
   //1 Check if email and password is correct
   if (!email || !password) {
-    next(new AppError('Please provide email and password', 400));
+    return next(new AppError('Please provide email and password', 400));
   }
 
   //2 Check if user exists && password is correct
+  const user = await User.findOne({ email }).select('+password');
+  //We're explictly showing the password field here as it's needed to check it.
+  //Thar's done by using the select function and passing a + to the field name to show in the response object : select('+password')
 
   //3 If everything is correct, send the token to the user/client
   const token = '';
@@ -42,4 +45,4 @@ exports.login = (req, res, next) => {
     status: 'success',
     token,
   });
-};
+});
