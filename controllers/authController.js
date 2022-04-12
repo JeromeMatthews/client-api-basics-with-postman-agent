@@ -3,6 +3,14 @@ const User = require('./../model/usermodel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
 
+
+
+
+// STAGE 1 TOken issue for new and existing users:
+//===============================================
+
+//STEPS FOR NEW USERS -> TOKEN ISSUE PROCESS
+
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -31,7 +39,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
-  //STEPS FOR THE LOGIN -> TOKEN ISSUE PROCESS
+  //STEPS FOR THE LOGIN EXISTING USERS -> TOKEN ISSUE PROCESS
 
   //1 Check if email and password is correct
   if (!email || !password) {
@@ -58,3 +66,8 @@ exports.login = catchAsync(async (req, res, next) => {
     token,
   });
 });
+
+
+// STAGE 2 ROUTE PROTECTION:
+//==========================
+
