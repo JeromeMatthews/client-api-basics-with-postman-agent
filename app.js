@@ -5,6 +5,11 @@ const cityRoutes = require('./routes/cityroutes');
 const userRoutes = require('./routes/userroutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
+
+
+//allows the application to parse the incoming requests that are in Json format.
+app.use(express.json());
+
 app.use('/api/v1/cities', cityRoutes);
 app.use('/api/v1/users', userRoutes);
 
