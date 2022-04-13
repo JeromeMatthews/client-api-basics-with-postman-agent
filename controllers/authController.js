@@ -21,9 +21,10 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
+    passwordChangedAt: req.body.passwordChangedAt,
   });
 
-  signToken(newUser._id);
+  const token = signToken(newUser._id);
 
   res.status(201).json({
     status: 'success',
@@ -85,19 +86,30 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  //2 Verification of the token:
+  //2 Verification of the token: Esursing no-one has manipulated the token.
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   console.log(decoded);
+
   //3 Check if the user still exists:
-  const freshUser = await User.findById(decoded.id);
-  if (!freshUser) {
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
     return next(
       new AppError('The user belonging to this token no longer exists.', 401)
     );
   }
 
   //4 Check if user has changed password after the JWT has been issued:
-
+  //this part will be on the user model, using an instance method.
+  if (currentUser.changedPassword(decoded.iat)) {
+    return next(
+      new AppError(
+        'User has recently changed their password, please login again',
+        401
+      )
+    );
+  }
+  /// GRANT ACCESS TO PROTECTED ROUTE:
+  req.user = currentUser;
   next();
   // remember, since this is not the final endpoint for a given route it must have nex()); at the end of the middleware function or the application will stall. Since no response would have been sent back from the sever.
 });

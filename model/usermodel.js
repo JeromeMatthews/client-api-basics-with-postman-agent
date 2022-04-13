@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same.',
     },
   },
+  passwordChangedAt: {
+    type: Date,
+  },
 });
 
 //To encrypt the password we make us of the Javascript implementation of the bcrypt library. Bcryptjs. We use the asynchronous function version as we're working with asynchronous codes in node. The function is on the mongoose middleware: pre action, of the Document middleware.
@@ -43,13 +46,31 @@ userSchema.pre('save', async function (next) {
   //Delete passwordConfirm field.
   this.passwordConfirm = undefined;
   //NOTE: We can do this becuase the required field on passwordConfirm will enforce an entry into the passwordConfirm field, but it is not necessary to be persisted to the database. It's role in confirming the input of what is found in password is finished here. So can be emptied.
-next();
+  next();
 });
 
-userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
-  //Return true if the passwords being compared are the same and false if they are different. The user password has to be passed in as the field is currently set to be unaccessible with select:false. So we can't reference it directly using this.passowrd as you would normally be able to. Given that this is a instance of the userSchema and its properties.  
+userSchema.methods.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  //Return true if the passwords being compared are the same and false if they are different. The user password has to be passed in as the field is currently set to be unaccessible with select:false. So we can't reference it directly using this.passowrd as you would normally be able to. Given that this is a instance of the userSchema and its properties.
   return await bcrypt.compare(candidatePassword, userPassword);
-  //we need the .compare function to unhash the userPasword and copmare with the candidatePassword - the entered one. We would not be able to otherwise. This is for step 2 - part 2 checking to see if the password is correct. 
-}
+  //we need the .compare function to unhash the userPasword and copmare with the candidatePassword - the entered one. We would not be able to otherwise. This is for step 2 - part 2 checking to see if the password is correct.
+};
+
+userSchema.methods.changedPassword = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimeStamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    console.log(changedTimeStamp, JWTTimestamp);
+    return JWTTimestamp < changedTimeStamp;
+  }
+
+  //False means not changed:
+  return false;
+};
+
 const user = mongoose.model('User', userSchema);
 module.exports = user;
