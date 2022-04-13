@@ -10,12 +10,9 @@ data without specifying a request header.
 */
 router.use(express.json());
 
-router.post('/signup', authController.signup);
-
-
 router
   .route('/')
-  .get(cityController.getAllCities)
+  .get(authController.protect,cityController.getAllCities)
   .post(cityController.addNewCity);
 router
   .route('/:id')

@@ -1,10 +1,8 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../model/usermodel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
-
-
-
 
 // STAGE 1 TOken issue for new and existing users:
 //===============================================
@@ -67,7 +65,39 @@ exports.login = catchAsync(async (req, res, next) => {
   });
 });
 
-
 // STAGE 2 ROUTE PROTECTION:
 //==========================
+exports.protect = catchAsync(async (req, res, next) => {
+  let token;
+  // 1 Getting token and check if it exists:
+  // typically the common practice is to send the token with request in the http headers. So to do this we need to know how to set headers. In the protect route we'll check to see if the token exists in the header under the field name: authorization with a value of Bearer = Example: authorization:Bearer 'vsdfaf3w3w56gb5uj56b' -  where the space is the way to differentiate the token string from the field.
 
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token) {
+    return next(
+      new AppError('You are not logged in. Please lo gain access', 401)
+    );
+  }
+
+  //2 Verification of the token:
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  console.log(decoded);
+  //3 Check if the user still exists:
+  const freshUser = await User.findById(decoded.id);
+  if (!freshUser) {
+    return next(
+      new AppError('The user belonging to this token no longer exists.', 401)
+    );
+  }
+
+  //4 Check if user has changed password after the JWT has been issued:
+
+  next();
+  // remember, since this is not the final endpoint for a given route it must have nex()); at the end of the middleware function or the application will stall. Since no response would have been sent back from the sever.
+});
