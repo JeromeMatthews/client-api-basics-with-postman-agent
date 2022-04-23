@@ -29,3 +29,10 @@ Project update: Apirl - 5th, 2022
 
 Week's focus: Adding global error handling functionality to the project. Removing try... catch blocks from routes. Then working on first stage of authentication and authorization pipeline following example in main course project.
 
+
+
+---------------------------------------------------------------------
+
+Project update: Apirl - 23th - 29th, 2022
+
+Week's focus: Adding Authorization section and Security middlewares. Route projection and adding user roles to database. Implementing access checks for patch, delete, update route functions, ensuring that users need to be authenticated prior to accessing these functions. User password reset functionality.  
