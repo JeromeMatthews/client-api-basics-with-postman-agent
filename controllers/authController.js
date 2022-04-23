@@ -82,7 +82,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   if (!token) {
     return next(
-      new AppError('You are not logged in. Please lo gain access', 401)
+      new AppError('You are not logged in. Please log in to gain access', 401)
     );
   }
 
@@ -114,21 +114,20 @@ exports.protect = catchAsync(async (req, res, next) => {
   // remember, since this is not the final endpoint for a given route it must have nex()); at the end of the middleware function or the application will stall. Since no response would have been sent back from the sever.
 });
 
-
-
-
 //AUTHORIZATION middleware - users, roles, permission,password reseting
 //================================================================
-exports.restrictTo =  (...roles) => {
+exports.restrictTo = (...roles) => {
   //... will spread out all the array elements of the the roles array and make them available to use in the closure below:
-    return(req, res, next) => {
-    // Roles refer to the different types of user roles allowed in the application. This app can have user, city-guide, and admin. 
-    //This function accesses the roles array through closures so whilr it does not possess the roles it self, since the function that wraps it does, it can access roles that way. 
-    if(!roles.includes(req.user.role)){
-      return next(new AppError('You do not have permission to perform this action',403));
-    }  
+  return (req, res, next) => {
+    // Roles refer to the different types of user roles allowed in the application. This app can have user, city-guide, and admin.
+    //This function accesses the roles array through closures so whilr it does not possess the roles it self, since the function that wraps it does, it can access roles that way.
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+    }
     //we call the .includes function to check if any of the passed roles from roles exists on the user object coming from the request object, this request object is passed to the restrictTo function by the next() at the end of protect. So we canmake use of all the user fields and the JWT.
     next();
     //pass on the access to the subsequent route once the role check is complete.
-    }
-}
+  };
+};
