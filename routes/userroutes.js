@@ -11,6 +11,9 @@ router
   .get(authController.protect, userController.getAllUsers)
   .post(userController.postNewUser);
 
+router.post('/forgotPassword', authController.forgotPassword);
+router.patch('resetPassword/:token', authController.resetPassword);
+
 router
   .route('/:id')
   .get(userController.getAllUsers)

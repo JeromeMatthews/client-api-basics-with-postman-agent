@@ -22,6 +22,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
+    role: req.body.role
   });
 
   const token = signToken(newUser._id);
@@ -126,8 +127,17 @@ exports.restrictTo = (...roles) => {
         new AppError('You do not have permission to perform this action', 403)
       );
     }
-    //we call the .includes function to check if any of the passed roles from roles exists on the user object coming from the request object, this request object is passed to the restrictTo function by the next() at the end of protect. So we canmake use of all the user fields and the JWT.
+    //we call the .includes function to check if any of the passed roles from roles exists on the user object coming from the request object, this request object is passed to the restrictTo function by the next() at the end of protect. So we can make use of all the user fields and the JWT.
     next();
     //pass on the access to the subsequent route once the role check is complete.
   };
 };
+
+
+exports.forgotPassword = catchAsync(async(req, res, next) =>{
+
+});
+
+exports.resetPassword = catchAsync(async(req, res, next) =>{
+
+});
