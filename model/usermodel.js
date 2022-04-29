@@ -32,11 +32,11 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: {
     type: Date,
   },
-  passwordResetToken:{ 
+  passwordResetToken: {
     type: String,
   },
   passwordResetExpires: {
-    type: String
+    type: Date,
   },
   role: {
     type: String,
@@ -84,17 +84,19 @@ userSchema.methods.changedPassword = function (JWTTimestamp) {
   return false;
 };
 
-
 //================================================================
-//Step 2 of the forgotPassword method Generate a new random token for the user to sign in with. 
-userSchema.methods.createPasswordResetToken = function() {
-const resetToken = crypto.randomBytes(32).toString('hex');
+//Step 2 of the forgotPassword method Generate a new random token for the user to sign in with.
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
 
-this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
 
-this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-return resetToken;
-}
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  return resetToken;
+};
 
 const user = mongoose.model('User', userSchema);
 module.exports = user;

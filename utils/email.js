@@ -20,7 +20,7 @@ const sendEmail = async (options) => {
   };
 
   //Actually send the email
-  await transport.sendEmail(mailOptions);
+  await transport.sendMail(mailOptions);
 };
 
 module.exports = sendEmail;
