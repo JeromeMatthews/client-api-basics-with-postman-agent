@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./../model/usermodel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
-
+const sendEmail = require('../utils/email');
 // STAGE 1 TOken issue for new and existing users:
 //===============================================
 
@@ -22,7 +22,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
-    role: req.body.role
+    role: req.body.role,
   });
 
   const token = signToken(newUser._id);
@@ -133,11 +133,42 @@ exports.restrictTo = (...roles) => {
   };
 };
 
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  //Get User based on POSTed email:
+  const user = await User.findOne({ email: req.body.email });
 
-exports.forgotPassword = catchAsync(async(req, res, next) =>{
+  //Generate a random  reset token:
+  //We build this on the instance method of the model. Calling User this instance of it will have the function available.
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+  // have to use save to be able to persit the change to the database. The validateBeforeSave: false will allow the requirements for submitting the forgot password route to be sent to the server without having to complete all the validation steps. deactivates all the validators.
 
+  //Send it to the user's email address
+  const resetUrl = `${req.protocol}://${req.get(
+    'host'
+  )}/api/v1/users/resetPassword/${resetToken}`;
+
+  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetUrl}. \nIf you didn't forget your password, please ignore this email`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Your password reset token. (only valid for 10 minutes)',
+      message,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Your password reset token has been sent to the email.',
+    });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    // need to ensure the save methods is called so the modified token and expiry fields are updated.
+
+    return next(new AppError('There was an error sending the email'), 500);
+  }
 });
 
-exports.resetPassword = catchAsync(async(req, res, next) =>{
-
-});
+exports.resetPassword = catchAsync(async (req, res, next) => {});
