@@ -17,6 +17,13 @@ const userSchema = new mongoose.Schema({
   photo: {
     type: String,
   },
+  
+  role: {
+    type: String,
+    enum: ['admin', 'city-guide', 'user'],
+    default: 'user',
+  },
+
   password: { type: String, required: true, minLength: 8, select: false },
   passwordConfirm: {
     type: String,
@@ -29,20 +36,10 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same.',
     },
   },
-  passwordChangedAt: {
-    type: Date,
-  },
-  passwordResetToken: {
-    type: String,
-  },
-  passwordResetExpires: {
-    type: Date,
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'city-guide', 'user'],
-    default: 'user',
-  },
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date,
+
 });
 
 //To encrypt the password we make us of the Javascript implementation of the bcrypt library. Bcryptjs. We use the asynchronous function version as we're working with asynchronous codes in node. The function is on the mongoose middleware: pre action, of the Document middleware.
@@ -58,6 +55,20 @@ userSchema.pre('save', async function (next) {
   //Delete passwordConfirm field.
   this.passwordConfirm = undefined;
   //NOTE: We can do this becuase the required field on passwordConfirm will enforce an entry into the passwordConfirm field, but it is not necessary to be persisted to the database. It's role in confirming the input of what is found in password is finished here. So can be emptied.
+  next();
+});
+
+//PASSWORD RESET FUNCTIONALITY
+//===========================================
+//2)Then user send token with email, and new password and updates the password field.
+// stage 3 or 4) Update changedPasswordAt property for the user
+userSchema.pre('save', function (next) {
+  //check if the passwordChangedAt field needs to be changed or not
+  if (!this.isModified('password') || this.isNew) {
+    return next();
+  }
+
+  this.passwordChangedAt = Date.now() - 1000;
   next();
 });
 
@@ -94,7 +105,7 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(resetToken)
     .digest('hex');
 
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  this.passwordResetExpires = Date.now() + 10 * 60 * 60 * 1000;
   return resetToken;
 };
 

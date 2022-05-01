@@ -1,4 +1,5 @@
 const { promisify } = require('util');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('./../model/usermodel');
 const catchAsync = require('./../utils/catchAsync');
@@ -14,6 +15,12 @@ const signToken = (id) => {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
+
+//Code refactor for responses and issuing the JWT to the client:
+// const createSendToken = (user, statusCode, res) =>{
+//   const token = signToken(user._id);
+
+// }
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
@@ -137,6 +144,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   //Get User based on POSTed email:
   const user = await User.findOne({ email: req.body.email });
 
+  if (!user) {
+    return next(new AppError('There is no user with email address', 404));
+  }
+
   //Generate a random  reset token:
   //We build this on the instance method of the model. Calling User this instance of it will have the function available.
   const resetToken = user.createPasswordResetToken();
@@ -171,4 +182,47 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.resetPassword = catchAsync(async (req, res, next) => {});
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  //1Get the user based on the token.
+  // -- With the token having some level of encryption we can only compare it to the one stored in the database by encrypting it as well.
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  //grabs the token from the req.params object where the :/parameter lives. reminder - we can call it anything, and in this case we named it token, as it holds the token for the user.
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+  //with the token in the same state as the one stored in the database we can compare to find a match for a given user:
+
+  //2 Checks if the token has expired or not
+  //The second query: passwordResetExpires: {$gt: Date.now() - is checking that the time given to use the token has not already expired. Using the query: $gt: Date.now() - Where the query evaluates if the date in the field is lesser than or greater than the current date. If the date lesser than the current date, that means the reset token has expired.
+
+  if (!user) {
+    return next(
+      new AppError('The token has already expired, or is invalid', 400)
+    );
+  }
+
+  //Set the new password:
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  //Then clear the Reset password token and token expiration fields:
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  //Then await the save of the password to the database:
+  await user.save();
+  // ensuring  the changes persist to the database. By using the save() method.
+
+  // 3) Update changedPasswordAt property for the user
+
+  // 4) Log the user in, send JWT
+  const token = signToken(user._id);
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
+});
