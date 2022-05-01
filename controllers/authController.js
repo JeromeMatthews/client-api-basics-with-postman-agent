@@ -17,9 +17,17 @@ const signToken = (id) => {
 };
 
 //Code refactor for responses and issuing the JWT to the client:
-// const createSendToken = (user, statusCode, res) =>{
-//   const token = signToken(user._id);
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
 
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
 // }
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -34,13 +42,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const token = signToken(newUser._id);
 
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user: newUser,
-    },
-  });
+  createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -67,11 +69,7 @@ exports.login = catchAsync(async (req, res, next) => {
     //We can call the correct password function as it exists on the user document. That document is created by the result of the findOne() method query on the userSchema. The candidate password will come in from the request body, stored in password. The user password from the schema will be in user.password, which agin we can acces here since we used the select('+password') function.
   }
   //3 If everything is correct, send the token to the user/client
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(user, 200, res);
 });
 
 // STAGE 2 ROUTE PROTECTION:
@@ -218,11 +216,28 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // ensuring  the changes persist to the database. By using the save() method.
 
   // 3) Update changedPasswordAt property for the user
+  //done in the User schema
 
   // 4) Log the user in, send JWT
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(user, 200, res);
+});
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  //Get the User from the collection, the user data at this point would have been carried forwward from the response object after passing the login authentication middleware. So we reach into the user object for the id.
+
+  const user = await User.findById(req.user.id).select('+password');
+  //Since, by default the password field is set to not show in query results we have to explictly call for it using the select function with a + operator to let Mongo know that we want to have the password field in the query results.
+
+  //Now check if the user send the correct password in the POST request to verify that they know the current password for the user.
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError('Your current password is incorrect', 401));
+  }
+
+  //Otherwise update the password field:
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save(); // Again, we use the save method to presit the changes to the database, and ensure that the validators ccan be run on the entered password data.
+
+  // Log user in, send JWT
+  createSendToken(user, 200, res);
 });
