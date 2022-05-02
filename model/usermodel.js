@@ -82,7 +82,7 @@ userSchema.pre('save', function (next) {
 //AUTHORIZATION middleware for the user Controller - deleteMe route. 
 userSchema.pre(/^find/, function(next) {
   //this points to the current query
-  this.find({active: true});
+  this.find({active: {$ne: false}});
   //This middleware is an example of Query middleware, it will run everytime any query is sent to the database. We use it to ensure only documents with the active field set to true will be returned to the client side. It is in the pre category of middlewares, so it will run before any queries. 
 
   next();
