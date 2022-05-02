@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
+
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+
 const cityRoutes = require('./routes/cityroutes');
 const userRoutes = require('./routes/userroutes');
 const AppError = require('./utils/appError');
@@ -12,6 +15,22 @@ app.use(express.static(`${__dirname}/public`));
 
 app.use('/api/v1/cities', cityRoutes);
 app.use('/api/v1/users', userRoutes);
+
+
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
+//Security feature: route access limiting, to prevent Brute force and DOS attacks.
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message:'Too many requests from this IP, please try again in an hour.'
+});
+app.use('/api',limiter);
+
+
 
 app.all('*', (req, res, next) => {
   // // We create a new Error object instance and make the message, status, and statusCode properties on it, then pass it to the global Error handler we createed by passing the error object as a parameter to the next() function;
@@ -29,9 +48,6 @@ app.all('*', (req, res, next) => {
  1- Morgan - detailed server logging:
 */
 //==----------------------------------------------------------------
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
 
 //ERROR HANDLING middleware
 //To create errr handling middleware we use the app.use() method and pass err as the first argument to the middleware function.
