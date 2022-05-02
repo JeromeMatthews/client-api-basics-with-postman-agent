@@ -40,6 +40,11 @@ const userSchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetExpires: Date,
 
+  active:{
+    type: Boolean,
+    default: true,
+    select: false
+  }
 });
 
 //To encrypt the password we make us of the Javascript implementation of the bcrypt library. Bcryptjs. We use the asynchronous function version as we're working with asynchronous codes in node. The function is on the mongoose middleware: pre action, of the Document middleware.
@@ -70,6 +75,18 @@ userSchema.pre('save', function (next) {
 
   this.passwordChangedAt = Date.now() - 1000;
   next();
+});
+
+
+// DELETE CURRENT USER FROM LIST OF USERS
+//AUTHORIZATION middleware for the user Controller - deleteMe route. 
+userSchema.pre(/^find/, function(next) {
+  //this points to the current query
+  this.find({active: true});
+  //This middleware is an example of Query middleware, it will run everytime any query is sent to the database. We use it to ensure only documents with the active field set to true will be returned to the client side. It is in the pre category of middlewares, so it will run before any queries. 
+
+  next();
+
 });
 
 userSchema.methods.correctPassword = async function (
