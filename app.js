@@ -1,27 +1,26 @@
+//Native packages
 const express = require('express');
 const app = express();
 
+//3rd-Party packages 
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
+
+//App specific packages
 const cityRoutes = require('./routes/cityroutes');
 const userRoutes = require('./routes/userroutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
-//allows the application to parse the incoming requests that are in Json format.
-app.use(express.json());
-app.use(express.static(`${__dirname}/public`));
-
-app.use('/api/v1/cities', cityRoutes);
-app.use('/api/v1/users', userRoutes);
 
 
-
+//Development Logging 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
+//Limit requests from same API
 //Security feature: route access limiting, to prevent Brute force and DOS attacks.
 const limiter = rateLimit({
   max: 100,
@@ -31,6 +30,17 @@ const limiter = rateLimit({
 app.use('/api',limiter);
 
 
+//Set security on HTTP headers.
+app.use(helmet()); 
+
+
+//BODY PARSER, reading data from body into req.body
+//allows the application to parse the incoming requests that are in Json format.
+app.use(express.json({limit: '10kb'}));// passing the limit options to the json function prevent hijacking of the query string. 
+app.use(express.static(`${__dirname}/public`));
+
+app.use('/api/v1/cities', cityRoutes);
+app.use('/api/v1/users', userRoutes);
 
 app.all('*', (req, res, next) => {
   // // We create a new Error object instance and make the message, status, and statusCode properties on it, then pass it to the global Error handler we createed by passing the error object as a parameter to the next() function;
