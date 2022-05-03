@@ -6,7 +6,9 @@ const app = express();
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
 
 //App specific packages
 const cityRoutes = require('./routes/cityroutes');
@@ -38,6 +40,17 @@ app.use(helmet());
 //allows the application to parse the incoming requests that are in Json format.
 app.use(express.json({limit: '10kb'}));// passing the limit options to the json function prevent hijacking of the query string. 
 app.use(express.static(`${__dirname}/public`));
+
+//Data Sanitization against NoSQL query injection.
+app.use(mongoSanitize());//Filters out all the mongoDB operators - "$"
+
+
+//Data Sanitization against XSS attacks
+app.use(xss());//Filters out malicous html code , and removes any HTML symbols. 
+
+
+//Preventing Parameter Pollution: 
+app.use(hpp({whitelist:['']}));
 
 app.use('/api/v1/cities', cityRoutes);
 app.use('/api/v1/users', userRoutes);
