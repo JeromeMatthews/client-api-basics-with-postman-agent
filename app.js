@@ -13,6 +13,7 @@ const hpp = require('hpp');
 //App specific packages
 const cityRoutes = require('./routes/cityroutes');
 const userRoutes = require('./routes/userroutes');
+const reviewRoutes = require('./routes/reviewroutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -54,6 +55,7 @@ app.use(hpp({whitelist:['']}));
 
 app.use('/api/v1/cities', cityRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
 
 app.all('*', (req, res, next) => {
   // // We create a new Error object instance and make the message, status, and statusCode properties on it, then pass it to the global Error handler we createed by passing the error object as a parameter to the next() function;

@@ -73,6 +73,6 @@ citySchema.pre(/^find/, function (next) {
   next();
 });
 
-const city = mongoose.model('city', citySchema);
+const city = mongoose.model('City', citySchema);
 
 module.exports = city;
