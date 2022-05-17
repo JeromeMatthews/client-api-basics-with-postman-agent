@@ -47,6 +47,30 @@ const citySchema = new mongoose.Schema({
       required: true,
     },
   },
+
+  cityguides: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      //with this the user model import is not required, mongoose will know where to look for User.
+    },
+  ],
+});
+
+/*Allows us to populate any fields where they are referenced in a given schema.
+Whenever a query is sent to find a given resource on the database. 
+
+If there are fields with objectId references on them, then populate them with the appropriate data. In this case we populate the cityguides field using the reference given to the User collection. 
+*/
+
+citySchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'cityguides',
+    select: 'name role email',
+    //The above select says to remove the V and passwordChangedAt fields from the end user output.
+  });
+
+  next();
 });
 
 const city = mongoose.model('city', citySchema);

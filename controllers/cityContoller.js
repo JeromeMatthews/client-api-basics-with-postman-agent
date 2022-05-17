@@ -156,10 +156,12 @@ exports.getCity = catchAsync(async (req, res, next) => {
 
   //Get a city from the mongo database using mongoose: findById();
 
-  const cities = await City.findById(req.params.id, () => {
+  const cities = await City.findById(req.params.id);
+
+  if (!cities) {
     return next(new AppError('City not found.', 404));
     //we return so we don't send a response twice causing another error, "headers already sent" - error.
-  });
+  }
 
   res.status(200).json({
     status: 'success, city found:',
