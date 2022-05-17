@@ -9,23 +9,23 @@ const reviewSchema = new mongoose.Schema(
       type: Number,
       default: 3,
       min: [1, 'A review may not be less than 1 star'],
-      max: [1, 'A review may not be greater than 5 stars'],
+      max: [5, 'A review may not be greater than 5 stars'],
     },
     createdAt: {
       type: Date,
       default: Date.now(),
       select: false,
     },
-    tour: {
+    city: {
       //Parent reference to the tour model.
       type: mongoose.Schema.ObjectId,
-      ref: 'Tour',
+      ref: 'city',
       required: [true, 'Review must belong to a tour'],
     },
     user: {
       //Parent reference to the user model.
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'Review must belong to a user'],
     },
   },
@@ -37,5 +37,21 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-const review = mongoose.model('Review', reviewSchema);
-module.exports = review;
+reviewSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'city',
+  });
+
+  next();
+});
+
+reviewSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'user',
+  });
+
+  next();
+});
+
+const Review = mongoose.model('Review', reviewSchema);
+module.exports = Review;
