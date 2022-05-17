@@ -35,4 +35,12 @@ Week's focus: Adding global error handling functionality to the project. Removin
 
 Project update: Apirl - 23th - 29th, 2022
 
-Week's focus: Adding Authorization section and Security middlewares. Route projection and adding user roles to database. Implementing access checks for patch, delete, update route functions, ensuring that users need to be authenticated prior to accessing these functions. User password reset functionality.  
+Week's focus: Adding Authorization section and Security middlewares. Route protection and adding user roles to database. Implementing access checks for patch, delete, update route functions, ensuring that users need to be authenticated prior to accessing these functions. User password reset functionality.  
+
+
+
+---------------------------------------------------------------------
+
+Project update: May - 16th - 21st, 2022
+
+Week's foucs: Adding Data modelling features to collecitons. Adding Locations and Reviews model, establishing relationships between all collections, populating output of collections. Designing Entity Relationship Models as blueprint for collections. Explore: Embedding, Child, and Parent references for modeling relationships between collections.  
