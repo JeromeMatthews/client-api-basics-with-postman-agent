@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const reviewSchema = new mongoose.Schema(
   {
     review: {
@@ -19,13 +18,13 @@ const reviewSchema = new mongoose.Schema(
     city: {
       //Parent reference to the tour model.
       type: mongoose.Schema.ObjectId,
-      ref: 'city',
-      required: [true, 'Review must belong to a tour'],
+      ref: 'City',
+      required: [true, 'Review must belong to a city'],
     },
     user: {
       //Parent reference to the user model.
       type: mongoose.Schema.ObjectId,
-      ref: 'user',
+      ref: 'User',
       required: [true, 'Review must belong to a user'],
     },
   },

@@ -56,7 +56,7 @@ const citySchema = new mongoose.Schema({
     },
   ],
 });
-
+//Child referencing 
 /*Allows us to populate any fields where they are referenced in a given schema.
 Whenever a query is sent to find a given resource on the database. 
 
