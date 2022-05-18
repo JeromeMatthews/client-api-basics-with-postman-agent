@@ -2,6 +2,7 @@ const express = require('express');
 const cityController = require('./../controllers/cityContoller');
 const router = express.Router();
 const authController = require('./../controllers/authController');
+const reviewController = require('./../controllers/reviewController');
 //----------------------------------------------------------------
 /* express.json() allows the server to handle incoming JSON based requests. 
 Since the default is to expect text in the request body, this allows us to send the JSON
@@ -18,6 +19,15 @@ The middleware assigned to handle authentication is the authController.protect m
 /* Authorization notes: In this application, the data stored for the cities can be used by anyone, as long as they are logged in. However to be able to make any changes to the data stored is only allowed by the city-guides and the app administrator. 
 
 The middleware assigned to handle the authorization of users is the authController.restrictTo middleware.*/
+
+router
+  .route('/:cityId/reviews')
+  .post(
+    authController.protect,
+    authController.restrictTo('user'),
+    reviewController.createReview
+  );
+
 router
   .route('/')
   .get(authController.protect, cityController.getAllCities)
