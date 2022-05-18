@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-  const review = await Review.find(); // gets all Reviews in collection.
+  const review = await Review.find().select('-__v'); // gets all Reviews in collection.
 
   res.status(200).json({
     status: 'success',
@@ -19,7 +19,11 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
 });
 
 exports.createReview = catchAsync(async (req, res, next) => {
-  const newReview = await review.create(req.body);
+  //Allow Nested routes
+  if (!req.body.city) req.body.city = req.params.cityId;
+  if (!req.body.user) req.body.user = req.user.id;
+
+  const newReview = await Review.create(req.body);
 
   if (!newReview) {
     next(new AppError('Error - Could not create review', 400));

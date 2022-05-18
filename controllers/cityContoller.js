@@ -156,7 +156,7 @@ exports.getCity = catchAsync(async (req, res, next) => {
 
   //Get a city from the mongo database using mongoose: findById();
 
-  const cities = await City.findById(req.params.id);
+  const cities = await City.findById(req.params.id).populate('reviews');
 
   if (!cities) {
     return next(new AppError('City not found.', 404));
