@@ -70,6 +70,13 @@ citySchema.pre(/^find/, function (next) {
     //The above select says to remove the V and passwordChangedAt fields from the end user output.
   });
 
+
+  citySchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'city',
+    localField: '_id'
+  });
+
   next();
 });
 
