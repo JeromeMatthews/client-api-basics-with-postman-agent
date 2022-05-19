@@ -1,6 +1,7 @@
 const Review = require('../model/reviewModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const CRUDfactory = require('../controllers/crudFunctionFactory');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
   let filter = {};
@@ -39,3 +40,6 @@ exports.createReview = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+
+exports.deleteReview = CRUDfactory.deleteOne(Review);

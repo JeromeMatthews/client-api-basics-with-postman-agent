@@ -1,6 +1,7 @@
 const City = require('../model/cityModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const CRUDfactory = require('./crudFunctionFactory');
 
 // ----------------------------------------------------------------
 /* read the data in from the city data json file. Then parsing it so it can be used. 
@@ -235,24 +236,26 @@ exports.updateCity = catchAsync(async (req, res, next) => {
   // In the example from the course, Jonas references the document IDs, and as such uses the findById() method.
 });
 
-exports.deleteCity = catchAsync(async (req, res, next) => {
-  //Deleteing from Mongo database using Mongoose findByIdAndDelete(); method.
+exports.deleteCity = CRUDfactory.deleteOne(City);
 
-  const cityName = req.params.id;
-  await City.findByIdAndDelete(cityName, () => {
-    return next(new AppError('City not found.', 404));
-    //we return so we don't send a response twice causing another error, "headers already sent" - error.
-  });
+// exports.deleteCity = catchAsync(async (req, res, next) => {
+//   //Deleteing from Mongo database using Mongoose findByIdAndDelete(); method.
 
-  res.status(204).json({
-    status: 'success, confirmed deltetion of city data.',
-    data: null,
-  });
+//   const cityName = req.params.id;
+//   await City.findByIdAndDelete(cityName, () => {
+//     return next(new AppError('City not found.', 404));
+//     //we return so we don't send a response twice causing another error, "headers already sent" - error.
+//   });
 
-  //FILE DATA Deletion method
+//   res.status(204).json({
+//     status: 'success, confirmed deltetion of city data.',
+//     data: null,
+//   });
 
-  // res.status(204).json({
-  //   status: 'success',
-  //   data: null,
-  // });
-});
+//   //FILE DATA Deletion method
+
+//   // res.status(204).json({
+//   //   status: 'success',
+//   //   data: null,
+//   // });
+// });
