@@ -43,4 +43,4 @@ Week's focus: Adding Authorization section and Security middlewares. Route prote
 
 Project update: May - 16th - 21st, 2022
 
-Week's foucs: Adding Data modelling features to collecitons. Adding Locations and Reviews model, establishing relationships between all collections, populating output of collections. Designing Entity Relationship Models as blueprint for collections. Explore: Embedding, Child, and Parent references for modeling relationships between collections.  
+Week's foucs: Adding Data modelling features to collecitons. Adding Locations and Reviews model, establishing relationships between all collections, populating output of collections. Designing Entity Relationship Models as blueprint for collections. Explore: Embedding, Child, and Parent references for modeling relationships between collections. Also refactoring CRUD functions into factory functions.   
