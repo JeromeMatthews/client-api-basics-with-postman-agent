@@ -3,7 +3,10 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-  const review = await Review.find().select('-__v'); // gets all Reviews in collection.
+  let filter = {};
+  if(req.params.cityId) filter = {city: req.params.cityId};
+
+  const review = await Review.find(filter).select('-__v'); // gets all Reviews in collection.
 
   res.status(200).json({
     status: 'success',

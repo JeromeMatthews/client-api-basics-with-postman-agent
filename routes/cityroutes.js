@@ -2,7 +2,7 @@ const express = require('express');
 const cityController = require('./../controllers/cityContoller');
 const router = express.Router();
 const authController = require('./../controllers/authController');
-const reviewController = require('./../controllers/reviewController');
+const reviewRouter = require('./../routes/reviewroutes');
 //----------------------------------------------------------------
 /* express.json() allows the server to handle incoming JSON based requests. 
 Since the default is to expect text in the request body, this allows us to send the JSON
@@ -20,13 +20,7 @@ The middleware assigned to handle authentication is the authController.protect m
 
 The middleware assigned to handle the authorization of users is the authController.restrictTo middleware.*/
 
-router
-  .route('/:cityId/reviews')
-  .post(
-    authController.protect,
-    authController.restrictTo('user'),
-    reviewController.createReview
-  );
+router.use('/:cityId/reviews', reviewRouter);
 
 router
   .route('/')
