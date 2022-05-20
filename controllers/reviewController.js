@@ -17,24 +17,7 @@ exports.setTourUserIds = (req, res, next) => {
 
 
 
-exports.getAllReviews = catchAsync(async (req, res, next) => {
-  let filter = {};
-  if (req.params.cityId) filter = { city: req.params.cityId };
-
-  const review = await Review.find(filter).select('-__v'); // gets all Reviews in collection.
-
-  res.status(200).json({
-    status: 'success',
-    totalReviews: review.length,
-    data: {
-      review,
-    },
-  });
-
-  if (!review) {
-    next(new AppError('Error: No review found', 404));
-  }
-});
+exports.getAllReviews = CRUDfactory.getAll(Review);
 
 exports.createReview = CRUDfactory.createOne(Review);
 

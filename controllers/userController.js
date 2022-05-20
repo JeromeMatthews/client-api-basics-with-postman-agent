@@ -4,16 +4,6 @@ const catchAsync = require('../utils/catchAsync');
 const router = express.Router();
 const CRUDfactory = require('../controllers/crudFunctionFactory');
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: users,
-  });
-});
-
 exports.updateMe = catchAsync(async (req, res, next) => {
   //Allow user to update the user or account istelf.
 
@@ -61,6 +51,9 @@ exports.updateUser = (req, res, next) => {
     message: 'This route is not yet defined.',
   });
 };
+
+//Admin level route - Get all users.
+exports.getAllUsers = CRUDfactory.getAll(User);
 
 //Admin level deletion route. Actually removes the user from the server and database. Ultimately only accessible through the admin level authorization.
 
