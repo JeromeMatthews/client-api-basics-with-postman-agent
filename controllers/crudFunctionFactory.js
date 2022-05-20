@@ -2,6 +2,21 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 
+exports.createOne = Model => catchAsync(async (req, res, next) => {
+  const newDoc = await Model.create(req.body);
+
+  if (!newDoc) {
+    next(new AppError('Error - Could not create Document', 400));
+  }
+
+  res.status(201).json({
+    status: 'success - new resource created',
+    data: {
+      doc: newDoc,
+    },
+  });
+});
+
 exports.deleteOne  = Model =>  catchAsync(async (req, res, next) => {
     //Deleteing from Mongo database using Mongoose findByIdAndDelete(); method.
   
