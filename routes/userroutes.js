@@ -19,6 +19,14 @@ router.patch(
   authController.updatePassword
 );
 
+//Route a User of the API can use to access their account informaiton.
+router.get(
+  '/me',
+  authController.protect,
+  userController.getMe,
+  userController.getUser
+);
+
 router.patch('/updateMe', authController.protect, userController.updateMe);
 router.delete('/deleteMe', authController.protect, userController.deleteMe);
 router

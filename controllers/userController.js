@@ -52,6 +52,14 @@ exports.updateUser = (req, res, next) => {
   });
 };
 
+//Route that allows a logged in user to access information about themselves.
+//It works by taking the current user's id from the request params object. 
+// In this case the params variable is called 'id' - it's assigned to the params field that would normally be assigned if the route to find a specfic user was requested. We shortcut this by just taking the information from the login. Then we assign this and pass it via next() to the getOne middleware that already has the code to find a specfic user. 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id
+  next()
+}
+
 //Admin level route - Get all users.
 exports.getAllUsers = CRUDfactory.getAll(User);
 
