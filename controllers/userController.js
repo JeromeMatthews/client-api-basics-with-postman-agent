@@ -55,6 +55,9 @@ exports.updateUser = (req, res, next) => {
 //Admin level route - Get all users.
 exports.getAllUsers = CRUDfactory.getAll(User);
 
+//Admin level route - Get all users.
+exports.getUser = CRUDfactory.getOne(User);
+
 //Admin level route - Update users.
 exports.updateUser = CRUDfactory.updateOne(User);
 

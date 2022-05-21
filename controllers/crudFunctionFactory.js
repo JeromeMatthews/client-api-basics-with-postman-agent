@@ -33,6 +33,25 @@ exports.getAll = (Model) =>
     }
   });
 
+exports.getOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    //Get a city from the mongo database using mongoose: findById();
+
+    const doc = await Model.findById(req.params.id).populate('reviews');
+
+    if (!doc) {
+      return next(new AppError('Document not found.', 404));
+      //we return so we don't send a response twice causing another error, "headers already sent" - error.
+    }
+
+    res.status(200).json({
+      status: 'success, document found:',
+      data: {
+        doc,
+      },
+    });
+  });
+
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const newDoc = await Model.create(req.body);
