@@ -8,10 +8,15 @@ exports.getAll = (Model) =>
     let filter = {};
     if (req.params.cityId) filter = { city: req.params.cityId };
 
-
     //Execute query
-const features = new apiFeatures(Model.find(filter).select('-__v'), req.query).filter().sort().limitFields().paginate();
-
+    const features = new apiFeatures(
+      Model.find(filter).select('-__v'),
+      req.query
+    )
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
 
     const doc = await features.query; // gets all Reviews in collection.
 
@@ -40,6 +45,29 @@ exports.createOne = (Model) =>
       status: 'success - new resource created',
       data: {
         doc: newDoc,
+      },
+    });
+  });
+
+exports.updateOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const cityName = req.params.id;
+    const update = req.body;
+
+    let doc = await Model.findByIdAndUpdate(cityName, update, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!doc) {
+      return next(new AppError('City not found.', 404));
+      //we return so we don't send a response twice causing another error, "headers already sent" - error.
+    }
+
+    res.status(200).json({
+      status: `success, ${cityName} has been updated`,
+      data: {
+        doc,
       },
     });
   });

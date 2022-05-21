@@ -21,4 +21,6 @@ exports.getAllReviews = CRUDfactory.getAll(Review);
 
 exports.createReview = CRUDfactory.createOne(Review);
 
+exports.updateReview = CRUDfactory.updateOne(Review);
+
 exports.deleteReview = CRUDfactory.deleteOne(Review);

@@ -55,6 +55,9 @@ exports.updateUser = (req, res, next) => {
 //Admin level route - Get all users.
 exports.getAllUsers = CRUDfactory.getAll(User);
 
+//Admin level route - Update users.
+exports.updateUser = CRUDfactory.updateOne(User);
+
 //Admin level deletion route. Actually removes the user from the server and database. Ultimately only accessible through the admin level authorization.
 
 exports.deleteUser = CRUDfactory.deleteOne(User);
