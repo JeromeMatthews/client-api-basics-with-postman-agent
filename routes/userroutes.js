@@ -13,22 +13,28 @@ router
 
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
+
+
+router.use(authController.protect);
+//Pu the Protect middleware ahead of all other middlewares. 
+//Takes te authorization our of the middlewares and makes it broader in scope. With in the larer context of the route. With
+//ALL ROUTES FOLLOWING CAN ONLY BE ACCESSED BY AUTHORIZED USERS  
+
+
 router.patch(
   '/updateMyPassword',
-  authController.protect,
   authController.updatePassword
 );
 
 //Route a User of the API can use to access their account informaiton.
 router.get(
   '/me',
-  authController.protect,
   userController.getMe,
   userController.getUser
 );
 
-router.patch('/updateMe', authController.protect, userController.updateMe);
-router.delete('/deleteMe', authController.protect, userController.deleteMe);
+router.patch('/updateMe', userController.updateMe);
+router.delete('/deleteMe',userController.deleteMe);
 router
   .route('/:id')
   .get(userController.getUser)

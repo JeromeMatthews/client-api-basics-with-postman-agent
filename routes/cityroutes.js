@@ -24,15 +24,17 @@ router.use('/:cityId/reviews', reviewRouter);
 
 router
   .route('/')
-  .get(authController.protect, cityController.getAllCities)
+  .get(cityController.getAllCities)
   .post(
     authController.protect,
     authController.restrictTo('admin', 'city-guide'),
     cityController.addNewCity
   );
+
+
 router
   .route('/:id')
-  .get(authController.protect, cityController.getCity)
+  .get(cityController.getCity)
   .patch(
     authController.protect,
     authController.restrictTo('admin', 'city-guide'),
