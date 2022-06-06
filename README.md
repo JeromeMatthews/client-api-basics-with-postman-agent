@@ -44,3 +44,19 @@ Week's focus: Adding Authorization section and Security middlewares. Route prote
 Project update: May - 16th - 21st, 2022
 
 Week's foucs: Adding Data modelling features to collecitons. Adding Locations and Reviews model, establishing relationships between all collections, populating output of collections. Designing Entity Relationship Models as blueprint for collections. Explore: Embedding, Child, and Parent references for modeling relationships between collections. Also refactoring CRUD functions into factory functions.   
+
+
+---------------------------------------------------------------------
+
+Project update: June - 06th - 11th , 2022
+
+Week's Focus: - Set up View Engine within project,
+- Decide which templating framework to use for front end: (Pug) like course project. 
+- organize templating structure for views
+- Extend the base HTML file with content from other pages. 
+
+- Frontend pages to be built: Needed for the Application:
+1) - Content page of the data to be displayed from the API (Example: The Overview page hosting the Tours from the Natours App)
+2) - Login Page (Users of the Api: City Guides, Adminstration)
+3) - User Account Page (Users of the Api: City Guides, Adminstration)
+
