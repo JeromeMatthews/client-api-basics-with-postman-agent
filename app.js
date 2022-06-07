@@ -16,6 +16,7 @@ const pug = require('pug');
 const cityRoutes = require('./routes/cityroutes');
 const userRoutes = require('./routes/userroutes');
 const reviewRoutes = require('./routes/reviewroutes');
+const viewRoutes = require('./routes/viewroutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -54,6 +55,7 @@ app.use(xss()); //Filters out malicous html code , and removes any HTML symbols.
 //Preventing Parameter Pollution:
 app.use(hpp({ whitelist: [''] }));
 
+app.use('/', viewRoutes);
 app.use('/api/v1/cities', cityRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
