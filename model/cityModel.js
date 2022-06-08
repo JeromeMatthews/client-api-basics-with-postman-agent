@@ -10,6 +10,9 @@ const citySchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+
+  Cityimage: [String],
+
   Landarea: {
     metric: {
       type: String,
@@ -56,7 +59,7 @@ const citySchema = new mongoose.Schema({
     },
   ],
 });
-//Child referencing 
+//Child referencing
 /*Allows us to populate any fields where they are referenced in a given schema.
 Whenever a query is sent to find a given resource on the database. 
 
@@ -70,11 +73,10 @@ citySchema.pre(/^find/, function (next) {
     //The above select says to remove the V and passwordChangedAt fields from the end user output.
   });
 
-
   citySchema.virtual('reviews', {
     ref: 'Review',
     foreignField: 'city',
-    localField: '_id'
+    localField: '_id',
   });
 
   next();
