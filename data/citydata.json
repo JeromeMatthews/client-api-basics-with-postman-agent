@@ -58,7 +58,7 @@
   {
     "Name": "Asunción",
     "Description": "Asunción is the capital city of Paraguay, bordered by the Paraguay River. It’s known for its grand López Palace, the seat of government housing the president’s offices. Nearby, the National Pantheon of Heroes has a mausoleum and plaques commemorating Paraguayan historical figures. The Independence House Museum is marked by its colonial architecture and features artifacts documenting emancipation from Spanish rule.",
-    "Cityimage": ["asuncion"],
+    "Cityimage": ["asuncion.jpg"],
     "Landarea": { "metric": "km", "value": 117 },
     "Elevation": { "metric": "meters", "value": 43 },
     "Founded": 1537,
@@ -85,7 +85,7 @@
   {
     "Name": "Kyiv",
     "Description": "Kyiv, also known as Kiev, is the capital and most populous city of Ukraine. It is in north-central Ukraine along the Dnieper River. As of 1 January 2021 its population was 2,962,180 making Kyiv the seventh-most populous city in Europe. ",
-    "Cityimage": ["kyiv"],
+    "Cityimage": ["kyiv.jpg"],
     "Landarea": { "metric": "km", "value": 323.9 },
     "Elevation": { "metric": "meters", "value": 587 },
     "Founded": 882,

@@ -5,13 +5,14 @@ block content
 
     main.main 
             .card-container
+                 each city in cities
                     .card 
                         .card__header 
-                            //- .card__picture 
-                            //-     .card__picture-overlay &nbsp;
-                            //-     img.card__picture-img(src=`/img/tours/${tour.imageCover}` alt=`${tour.name}`)
-                            //- h3.heading-tertirary 
-                            //-     span= tour.name
+                            .card__picture 
+                                .card__picture-overlay &nbsp;
+                                img.card__picture-img(src=`/img/${city.Cityimage}` alt=`${city.Name}`)
+                            h3.heading-tertirary 
+                                span= city.Name
 
                         .card-details 
                         //-     h4.card__sub-heading= `${tour.difficulty} ${tour.duration}-day tour`  
@@ -35,13 +36,5 @@ block content
                         //-     span= `${tour.maxGroupSize}`
 
                         .card__footer
-                            //- p 
-                            //-     span.card__footer-value= `$${tour.price}`
-                            //-     |  
-                            //-     span.card__footer-text per person
-
-                            //- p.card__ratings 
-                            //-     span.card__footer-ratings-value= tour.ratingsAverage
-                            //-     | 
-                            //-     span.card__footer-text= `rating (${ratingsQuantity})`
-                            //- a.btn.btn--green.btn--small(href=`/tour/${tour.slug}`) Details
+                    
+                            a.btn.btn--orange.btn--small(href=`/city/${city.slug}`) Details

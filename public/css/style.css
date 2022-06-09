@@ -68,10 +68,10 @@ body {
     linear,
     left top,
     right bottom,
-    from(#7dd56f),
-    to(#28b487)
+    from(#e9d08c),
+    to(#ffc010)
   );
-  background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
+  background-image: linear-gradient(to right bottom, #e9d08c, #ffc010);
   opacity: 0.7;
 }
 .card__picture-img {
@@ -192,12 +192,12 @@ body {
   background-color: #fff;
 }
 
-.btn--green {
-  background-color: #55c57a;
+.btn--orange {
+  background-color: #ffc010;
   color: #fff;
 }
 .btn--green::after {
-  background-color: #55c57a;
+  background-color: #feda7a;
 }
 
 .btn--small {

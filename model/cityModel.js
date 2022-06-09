@@ -1,10 +1,14 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const citySchema = new mongoose.Schema({
   Name: {
     type: String,
     required: true,
-  },
+  }, 
+  
+  slug: String,
+  
   Description: {
     type: String,
     required: true,
