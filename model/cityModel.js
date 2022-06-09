@@ -5,10 +5,10 @@ const citySchema = new mongoose.Schema({
   Name: {
     type: String,
     required: true,
-  }, 
-  
+  },
+
   slug: String,
-  
+
   Description: {
     type: String,
     required: true,
@@ -46,12 +46,12 @@ const citySchema = new mongoose.Schema({
   Population: {
     metric: {
       type: String,
-      required: true,
+      requried: true,
     },
 
     value: {
       type: Number,
-      required: true,
+      requried: true,
     },
   },
 
@@ -63,6 +63,14 @@ const citySchema = new mongoose.Schema({
     },
   ],
 });
+
+// Uses the pre-middleware function on the city model to create slugs - human-readable strings for the citydocument entries in the database.
+//We need this as we don't expect users to search for cities by their id's, that's isn't practical in a real world application.
+citySchema.pre('save', function (next) {
+  this.slug = slugify(this.Name, { lower: true });
+  next();
+});
+
 //Child referencing
 /*Allows us to populate any fields where they are referenced in a given schema.
 Whenever a query is sent to find a given resource on the database. 

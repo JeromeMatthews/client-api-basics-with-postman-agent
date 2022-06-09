@@ -109,6 +109,6 @@
     "Cityimage": ["san-antonio.jpg"],
     "Landarea": { "metric": "m2", "value": 505 },
     "Elevation": { "metric": "m", "value": 650 },
-    "population": { "metric": "million", "value": 1.508 }
+    "Population": { "metric": "million", "value": 1.508 }
   }
 ]

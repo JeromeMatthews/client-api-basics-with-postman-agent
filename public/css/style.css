@@ -181,7 +181,7 @@ body {
 
 .btn:focus {
   outline: none;
-  background-color: #2e864b;
+  background-color: #131102;
 }
 
 .btn--white {
@@ -208,7 +208,7 @@ body {
 .btn-small,
 .btn-small:link,
 .btn-small:visited {
-  background-color: #55c57a;
+  background-color: #d1a62d;
   color: #fff;
   font-size: 1.4rem;
   padding: 1.25rem 3rem;
@@ -229,7 +229,7 @@ body {
 
 .btn-text:link,
 .btn-text:visited {
-  color: #55c57a;
+  color: #afc412;
   display: inline-block;
   text-decoration: none;
   border-bottom: 1px solid #55c57a;
@@ -256,7 +256,7 @@ body {
 
 .btn-text:focus {
   outline: none;
-  outline: 3px solid #55c57a;
+  outline: 3px solid #f4fd00;
   outline-offset: 3px;
 }
 
@@ -320,4 +320,13 @@ body {
   .footer__copyright {
     justify-self: center;
   }
+}
+
+.header__hero-img {
+  -o-object-fit: cover;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  -o-object-position: 50% 25%;
+  object-position: 50% 25%;
 }

@@ -10,3 +10,19 @@ exports.getCityCollection = catchAsync(async (req, res, next) => {
     cities: cities,
   });
 });
+
+exports.getCity = catchAsync(async (req, res, next) => {
+  const city = await City.findOne({ slug: req.params.slug }).populate({
+    path: 'reviews',
+    fields: 'review rating user',
+  });
+
+  if (!city) {
+    next(new AppError('No city with the name you requested was found', 404));
+  }
+
+  res.status(200).render('city', {
+    title: `${city.slug}`,
+    city: city,
+  });
+});
