@@ -2,6 +2,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const City = require('./model/cityModel');
+const User = require('./model/userModel');
 
 dotenv.config({ path: './config.env' });
 
@@ -21,12 +22,17 @@ mongoose.connect(DB, {}).then(() => {
 const cityData = JSON.parse(
   fs.readFileSync(`${__dirname}/data/citydata.json`, 'utf8')
 );
+const userData = JSON.parse(
+  fs.readFileSync(`${__dirname}/data/userdata.json`, 'utf8')
+);
 
 //ADD FILE DATA TO THE DATABASE AUTOMATICALLY
 const importData = async () => {
   try {
     await City.create(cityData);
     console.log('city data loaded into db successfully.');
+    await User.create(userData);
+    console.log('user data loaded into db successfully.');
   } catch (err) {
     console.log(err);
   }
@@ -38,7 +44,8 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await City.deleteMany();
-    console.log('Collection: City, deleted successfully.');
+    await User.deleteMany();
+    console.log('Collection: City, and User  deleted successfully.');
   } catch (err) {
     console.log(err);
   }

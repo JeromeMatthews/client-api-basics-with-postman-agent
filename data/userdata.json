@@ -1,0 +1,65 @@
+[
+  {
+    "_id": "5c8a201e2f8fb814b56fa186",
+    "name": "Brian Spark",
+    "email": "kindling@campfire.com",
+    "photo": "user-11.jpg",
+    "role": "city-guide",
+    "active": true,
+    "password": "catchfire41"
+  },
+  {
+    "_id": "5c8a1f4e2f8fb814b56fa185",
+    "name": "Sydney Andover",
+    "email": "syndney@downunder.com",
+    "photo": "user-4.jpg",
+    "role": "user",
+    "active": true,
+    "password": "heyitsyndey@me"
+  },
+  {
+    "_id": "5c8a1f292f8fb814b56fa184",
+    "name": "Nile Lakes",
+    "email": "nilelakes@seawatch.com",
+    "photo": "user-5.jpg",
+    "role": "user",
+    "active": true,
+    "password": "riverrun2341"
+  },
+  {
+    "_id": "5c8a1ec62f8fb814b56fa183",
+    "name": "Mark Nobel",
+    "email": "makemarks@scribe.com",
+    "photo": "user-19.jpg",
+    "role": "city-guide",
+    "active": true,
+    "password": "1234hdts"
+  },
+  {
+    "_id": "5c8a1e1a2f8fb814b56fa182",
+    "name": "Lauren Silva",
+    "email": "silvabackgirllia@naturebiz.com",
+    "photo": "user-8.jpg",
+    "role": "city-guide",
+    "active": true,
+    "password": "silverBackGurl01"
+  },
+  {
+    "_id": "5c8a1dfa2f8fb814b56fa181",
+    "name": "Ajeet Ranfar",
+    "email": "iamajeet@wearajeet.com",
+    "photo": "uesr-17.jpg",
+    "role": "user",
+    "active": true,
+    "password": "whereIsAjeet"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc057",
+    "name": "Admin",
+    "email": "admin@cityapi.com",
+    "photo": "default.jpg",
+    "role": "admin",
+    "active": true,
+    "password": "iamadmin_1"
+  }
+]
