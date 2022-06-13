@@ -5,4 +5,5 @@ const viewController = require('../controllers/viewController');
 
 router.get('/', viewController.getCityCollection);
 router.get('/cities/:slug', viewController.getCity);
+router.get('/login', viewController.login);
 module.exports = router;

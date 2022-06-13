@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   photo: {
     type: String,
   },
-  
+
   role: {
     type: String,
     enum: ['admin', 'city-guide', 'user'],
@@ -25,26 +25,26 @@ const userSchema = new mongoose.Schema({
   },
 
   password: { type: String, required: true, minLength: 8, select: false },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'Please confirm your password'],
-    validate: {
-      //remember that is only works on the save() function
-      validator: function (el) {
-        return el === this.password; // abc === xyz
-      },
-      message: 'Passwords are not the same.',
-    },
-  },
+  // passwordConfirm: {
+  //   type: String,
+  //   required: [true, 'Please confirm your password'],
+  //   validate: {
+  //     //remember that is only works on the save() function
+  //     validator: function (el) {
+  //       return el === this.password; // abc === xyz
+  //     },
+  //     message: 'Passwords are not the same.',
+  //   },
+  // },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
 
-  active:{
+  active: {
     type: Boolean,
     default: true,
-    select: false
-  }
+    select: false,
+  },
 });
 
 //To encrypt the password we make us of the Javascript implementation of the bcrypt library. Bcryptjs. We use the asynchronous function version as we're working with asynchronous codes in node. The function is on the mongoose middleware: pre action, of the Document middleware.
@@ -77,16 +77,14 @@ userSchema.pre('save', function (next) {
   next();
 });
 
-
 // DELETE CURRENT USER FROM LIST OF USERS
-//AUTHORIZATION middleware for the user Controller - deleteMe route. 
-userSchema.pre(/^find/, function(next) {
+//AUTHORIZATION middleware for the user Controller - deleteMe route.
+userSchema.pre(/^find/, function (next) {
   //this points to the current query
-  this.find({active: {$ne: false}});
-  //This middleware is an example of Query middleware, it will run everytime any query is sent to the database. We use it to ensure only documents with the active field set to true will be returned to the client side. It is in the pre category of middlewares, so it will run before any queries. 
+  this.find({ active: { $ne: false } });
+  //This middleware is an example of Query middleware, it will run everytime any query is sent to the database. We use it to ensure only documents with the active field set to true will be returned to the client side. It is in the pre category of middlewares, so it will run before any queries.
 
   next();
-
 });
 
 userSchema.methods.correctPassword = async function (

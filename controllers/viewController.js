@@ -26,3 +26,7 @@ exports.getCity = catchAsync(async (req, res, next) => {
     city: city,
   });
 });
+
+exports.login = catchAsync(async (req, res, next) => {
+  res.status(200).render('login', {});
+});
