@@ -12,6 +12,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const pug = require('pug');
+const cookieParser = require('cookie-parser');
 //App specific packages
 const cityRoutes = require('./routes/cityroutes');
 const userRoutes = require('./routes/userroutes');
@@ -38,11 +39,46 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 //Set security on HTTP headers.
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", 'data:', 'blob:'],
+
+      baseUri: ["'self'"],
+
+      fontSrc: ["'self'", 'https:', 'data:'],
+
+      scriptSrc: ["'self'", 'https://*.cloudflare.com'],
+
+      scriptSrc: ["'self'", 'https://*.stripe.com'],
+
+      scriptSrc: ["'self'", 'http:', 'https://*.mapbox.com', 'data:'],
+
+      frameSrc: ["'self'", 'https://*.stripe.com'],
+
+      objectSrc: ["'none'"],
+
+      styleSrc: ["'self'", 'https:', 'unsafe-inline'],
+
+      workerSrc: ["'self'", 'data:', 'blob:'],
+
+      childSrc: ["'self'", 'blob:'],
+
+      imgSrc: ["'self'", 'data:', 'blob:'],
+
+      connectSrc: ["'self'", 'blob:', 'https://*.mapbox.com'],
+
+      upgradeInsecureRequests: [],
+    },
+  })
+);
 
 //BODY PARSER, reading data from body into req.body
 //allows the application to parse the incoming requests that are in Json format.
 app.use(express.json({ limit: '10kb' })); // passing the limit options to the json function prevent hijacking of the query string.
+
+//COOKIE PARSER, reading the cookie data from the client into the database.
+app.use(cookieParser());
 
 app.use(express.static(`${__dirname}/public`));
 
