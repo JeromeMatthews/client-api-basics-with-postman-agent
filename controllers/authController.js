@@ -138,9 +138,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   // remember, since this is not the final endpoint for a given route it must have next()); at the end of the middleware function or the application will stall. Since no response would have been sent back from the sever.
 });
 
-
-
-
 //AUTHENTICATION - Verification of cookie token - for the frontend. So user can access rendered pages.
 
 //Only for rendered pages, no errors can be generated here:
@@ -165,6 +162,7 @@ exports.isLoggedIn = async (req, res, next) => {
       }
 
       //If all checks out, then There is a logged in User. We assign the data decoded from the cookie token in the currentUser variable to the locals.user variable and pass it to the next middleware. Locals will be how we allow the rendered pug templates on the frontend to access the data stored in decoded JWT cookie.
+
       res.locals.user = currentUser;
       return next(); // Go to next middleware, which is the getAllTours route middleware.
     }
@@ -174,7 +172,6 @@ exports.isLoggedIn = async (req, res, next) => {
   }
   return next();
 };
-
 
 //AUTHORIZATION middleware - users, roles, permission,password reseting
 //================================================================

@@ -52,8 +52,6 @@ app.use(
 
       scriptSrc: ["'self'", 'https://*.stripe.com'],
 
-      scriptSrc: ["'self'", 'http:', 'https://*.mapbox.com', 'data:'],
-
       frameSrc: ["'self'", 'https://*.stripe.com'],
 
       objectSrc: ["'none'"],
@@ -65,8 +63,6 @@ app.use(
       childSrc: ["'self'", 'blob:'],
 
       imgSrc: ["'self'", 'data:', 'blob:'],
-
-      connectSrc: ["'self'", 'blob:', 'https://*.mapbox.com'],
 
       upgradeInsecureRequests: [],
     },
