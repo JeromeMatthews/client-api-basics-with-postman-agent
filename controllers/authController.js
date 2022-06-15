@@ -150,26 +150,25 @@ exports.isLoggedIn = async (req, res, next) => {
         process.env.JWT_SECRET
       );
 
-      // 3) Check if user still exists
+      // 2) Check if user still exists
       const currentUser = await User.findById(decoded.id);
       if (!currentUser) {
         return next();
       }
 
-      // 4) Check if the user changed password after the token was issued.
-      if (currentUser.changedPasswordAfter(decoded.iat)) {
+      // 3) Check if the user changed password after the token was issued.
+      if (currentUser.changedPassword(decoded.iat)) {
         return next();
       }
-
       //If all checks out, then There is a logged in User. We assign the data decoded from the cookie token in the currentUser variable to the locals.user variable and pass it to the next middleware. Locals will be how we allow the rendered pug templates on the frontend to access the data stored in decoded JWT cookie.
-
       res.locals.user = currentUser;
       return next(); // Go to next middleware, which is the getAllTours route middleware.
     }
   } catch (err) {
-    //If there's is no cookie with a JWT We skip all the above code.
     return next();
   }
+  //If there's is no cookie with a JWT We skip all the above code.
+  //return next();
   return next();
 };
 

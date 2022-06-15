@@ -11,7 +11,6 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
-const pug = require('pug');
 const cookieParser = require('cookie-parser');
 //App specific packages
 const cityRoutes = require('./routes/cityroutes');
@@ -39,35 +38,37 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 //Set security on HTTP headers.
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'", 'data:', 'blob:'],
+app.use(helmet());
 
-      baseUri: ["'self'"],
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     directives: {
+//       defaultSrc: ["'self'", 'data:', 'blob:'],
 
-      fontSrc: ["'self'", 'https:', 'data:'],
+//       baseUri: ["'self'"],
 
-      scriptSrc: ["'self'", 'https://*.cloudflare.com'],
+//       fontSrc: ["'self'", 'https:', 'data:'],
 
-      scriptSrc: ["'self'", 'https://*.stripe.com'],
+//       scriptSrc: ["'self'", 'https://*.cloudflare.com'],
 
-      frameSrc: ["'self'", 'https://*.stripe.com'],
+//       scriptSrc: ["'self'", 'https://*.stripe.com'],
 
-      objectSrc: ["'none'"],
+//       frameSrc: ["'self'", 'https://*.stripe.com'],
 
-      styleSrc: ["'self'", 'https:', 'unsafe-inline'],
+//       objectSrc: ["'none'"],
 
-      workerSrc: ["'self'", 'data:', 'blob:'],
+//       styleSrc: ["'self'", 'https:', 'unsafe-inline'],
 
-      childSrc: ["'self'", 'blob:'],
+//       workerSrc: ["'self'", 'data:', 'blob:'],
 
-      imgSrc: ["'self'", 'data:', 'blob:'],
+//       childSrc: ["'self'", 'blob:'],
 
-      upgradeInsecureRequests: [],
-    },
-  })
-);
+//       imgSrc: ["'self'", 'data:', 'blob:'],
+
+//       upgradeInsecureRequests: [],
+//     },
+//   })
+// );
 
 //BODY PARSER, reading data from body into req.body
 //allows the application to parse the incoming requests that are in Json format.
