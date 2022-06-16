@@ -134,6 +134,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   /// GRANT ACCESS TO PROTECTED ROUTE:
   req.user = currentUser;
+  res.locals.user = currentUser;
   next();
   // remember, since this is not the final endpoint for a given route it must have next()); at the end of the middleware function or the application will stall. Since no response would have been sent back from the sever.
 });
@@ -172,16 +173,14 @@ exports.isLoggedIn = async (req, res, next) => {
   return next();
 };
 
-
-exports.logout = (req,res) => {
+exports.logout = (req, res) => {
   res.cookie('jwt', 'loggedOut', {
     expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true
-  })
+    httpOnly: true,
+  });
 
-  res.status(200).json({ status: 'success'});
-}
-
+  res.status(200).json({ status: 'success' });
+};
 
 //AUTHORIZATION middleware - users, roles, permission,password reseting
 //================================================================

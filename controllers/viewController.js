@@ -30,3 +30,12 @@ exports.getCity = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   res.status(200).render('login', {});
 });
+
+
+
+
+exports.account = catchAsync(async (req, res, next) => {
+  res.status(200).render('account', {
+    title: 'account page',
+  });
+});
