@@ -172,6 +172,17 @@ exports.isLoggedIn = async (req, res, next) => {
   return next();
 };
 
+
+exports.logout = (req,res) => {
+  res.cookie('jwt', 'loggedOut', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  })
+
+  res.status(200).json({ status: 'success'});
+}
+
+
 //AUTHORIZATION middleware - users, roles, permission,password reseting
 //================================================================
 exports.restrictTo = (...roles) => {

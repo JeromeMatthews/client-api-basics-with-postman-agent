@@ -2,7 +2,6 @@ const City = require('../model/cityModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-
 exports.getCityCollection = catchAsync(async (req, res, next) => {
   const cities = await City.find();
 
@@ -29,7 +28,5 @@ exports.getCity = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  res.status(200).render('login', {
-    
-  });
+  res.status(200).render('login', {});
 });

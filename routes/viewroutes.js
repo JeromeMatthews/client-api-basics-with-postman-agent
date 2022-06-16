@@ -7,4 +7,5 @@ const router = express.Router();
 router.get('/', authController.isLoggedIn, viewController.getCityCollection);
 router.get('/cities/:slug', authController.isLoggedIn, viewController.getCity);
 router.get('/login', viewController.login);
+router.get('/logout', authController.logout);
 module.exports = router;
