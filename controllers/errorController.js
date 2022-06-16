@@ -27,35 +27,66 @@ const handleTokenExpiredError = (err) => {
 };
 //----------------------------------------------------------------
 
-const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-    stack: err.stack,
-    error: err,
-  });
-};
-
-const sendErrorProd = (err, res) => {
-  //Operational, trusted error: send message to the client
-  if (err.isOperational) {
+const sendErrorDev = (err, req, res) => {
+  if (req.originalUrl.startsWith('/api')) {
     res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
+      stack: err.stack,
+      error: err,
     });
-
-    //Programming or other unknown error. Don't leak error details.
   } else {
-    //1 log the error objecct
-    console.error('ERROR 💥', err);
-
-    //2 Send generic error message
-
-    res.status(500).json({
-      status: 'error',
-      message: 'Something went very wrong!',
+    // RENDERED WEBSITE
+    console.error('ERROR', err);
+    res.status(err.statusCode).render('error', {
+      title: 'Something went wrong',
+      msg: err.message,
     });
   }
+};
+
+const sendErrorProd = (err, req, res) => {
+  //FOR API
+  if (req.originalUrl.startsWith('/api')) {
+    //Operational, trusted error: send message to the client
+    if (err.isOperational) {
+      return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+      });
+
+      //Programming or other unknown error. Don't leak error details.
+    } else {
+      //1 log the error objecct
+      console.error('ERROR 💥', err);
+
+      //2 Send generic error message
+
+      res.status(500).json({
+        status: 'error',
+        message: 'Something went very wrong!',
+      });
+    }
+  } else {
+    //FOR RENDERED WEBSITE
+    // A) Operational, trusted error: send message to client
+    if (err.isOperational) {
+      console.log(err);
+      return res.status(err.statusCode).render('error', {
+        title: 'Something went wrong!',
+        msg: err.message,
+      });
+    }
+  }
+
+  // B) Programming or other unknown error: don't leak error details
+  // 1) Log error
+  console.error('ERROR 💥', err);
+  // 2) Send generic message
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong!',
+    msg: 'Please try again later.',
+  });
 };
 
 module.exports = (err, req, res, next) => {
@@ -70,11 +101,11 @@ module.exports = (err, req, res, next) => {
   //---------------------------------------------
 
   if (process.env.NODE_ENV === 'development') {
-    sendErrorDev(err, res);
+    sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = Object.create(err);
     //this is a destruction of the error object from the server so it can be reassigned to the parameters outlined for our error handling middleware. The defualt is called err and we are chaning it to error, and using let, as the object will be changed later
-
+    error.message = err.message;
     //-------------------------------
 
     /*Mongoose specific error handling functions, we handle them so they can be defined with the isOperational flag, to indictate they should be represented by the client side in a user friendly presentation. 
@@ -89,6 +120,6 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'JsonWebTokenError') error = handleJWTError(error);
     if (error.name === 'TokenExpiredError')
       error = handleTokenExpiredError(error);
-    sendErrorProd(error, res);
+    sendErrorProd(error, req, res);
   }
 };
