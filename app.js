@@ -74,6 +74,8 @@ app.use(helmet());
 //allows the application to parse the incoming requests that are in Json format.
 app.use(express.json({ limit: '10kb' })); // passing the limit options to the json function prevent hijacking of the query string.
 
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
 //COOKIE PARSER, reading the cookie data from the client into the database.
 app.use(cookieParser());
 

@@ -1,4 +1,5 @@
 const City = require('../model/cityModel');
+const User = require('../model/usermodel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
@@ -31,11 +32,27 @@ exports.login = catchAsync(async (req, res, next) => {
   res.status(200).render('login', {});
 });
 
-
-
-
 exports.account = catchAsync(async (req, res, next) => {
   res.status(200).render('account', {
     title: 'account page',
   });
 });
+
+exports.updateUserData = async (req, res, next) => {
+  const name = req.body.name;
+  const email = req.body.email;
+
+  const updatedData = await User.findByIdAndUpdate(
+    req.user.id,
+    { name, email },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).render('account', {
+    title: 'Account updated',
+    user: updatedData,
+  });
+};

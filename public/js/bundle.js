@@ -11492,7 +11492,7 @@ var _login = require("./login");
 
 // Used to fill in some of the functionality needed to make the code work in older browsers that don't support some of the features used, Example ES6 specific features. - Happens at the bundling process stage.
 // DOM elements
-var loginForm = document.querySelector('.form');
+var loginForm = document.querySelector('.form--login');
 var logOutBtn = document.querySelector('.nav__el--logout'); //VALUES:
 
 if (loginForm) {
@@ -11535,7 +11535,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63549" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49676" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
