@@ -11,8 +11,6 @@ router.get('/logout', authController.logout);
 
 router.get('/me', authController.protect, viewController.account);
 
-
-
 router.post(
   '/submit-user-data',
   authController.protect,

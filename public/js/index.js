@@ -3,10 +3,13 @@ import '@babel/polyfill';
 
 import { login } from './login';
 import { logout } from './login';
+import { showAlert } from './alerts';
 
 // DOM elements
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
+const saveSettingsBtn = document.querySelector('.btn--save-settings');
+
 //VALUES:
 
 if (loginForm) {
@@ -21,3 +24,8 @@ if (loginForm) {
 if (logOutBtn) {
   logOutBtn.addEventListener('click', logout);
 }
+
+// if (saveSettingsBtn) {
+//   saveSettingsBtn.addEventListener('click', showAlert());
+//   showAlert('success', 'Settings saved successfully');
+// }
