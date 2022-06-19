@@ -11,6 +11,12 @@ router.get('/logout', authController.logout);
 
 router.get('/me', authController.protect, viewController.account);
 
+// router.patch(
+//   '/updateMe',
+//   authController.protect,
+//   viewController.updateUserDataAPI
+// );
+
 router.post(
   '/submit-user-data',
   authController.protect,

@@ -3,11 +3,13 @@ import '@babel/polyfill';
 
 import { login } from './login';
 import { logout } from './login';
+import { updateSettings } from './updateSettings';
 import { showAlert } from './alerts';
 
 // DOM elements
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
+const userDataForm = document.querySelector('.form-user-data');
 const saveSettingsBtn = document.querySelector('.btn--save-settings');
 
 //VALUES:
@@ -25,7 +27,17 @@ if (logOutBtn) {
   logOutBtn.addEventListener('click', logout);
 }
 
-// if (saveSettingsBtn) {
-//   saveSettingsBtn.addEventListener('click', showAlert());
-//   showAlert('success', 'Settings saved successfully');
-// }
+if (userDataForm) {
+  userDataForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    updateSettings(name, email);
+  });
+}
+if (saveSettingsBtn) {
+  saveSettingsBtn.addEventListener('submit', (e) => {
+    e.preventDefault();
+    showAlert('success', 'Settings saved successfully');
+  });
+}
